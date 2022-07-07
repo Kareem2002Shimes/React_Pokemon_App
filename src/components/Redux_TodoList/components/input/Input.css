@@ -1,0 +1,35 @@
+.input-container {
+  height: 50px;
+  width: 80%;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+}
+.input-container input {
+  background: none;
+  flex: 1;
+  border: none;
+  margin-left: 12px;
+  height: 100%;
+  font-size: 17px;
+}
+.input-container input:focus {
+  outline: none;
+}
+.input-container .btn {
+  margin-right: 8px;
+  background-color: rgb(214, 213, 213);
+  border: none;
+  border-radius: 10px;
+  height: 30px;
+  width: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+.input-container .btn:hover {
+  background-color: #777;
+  color: #fff;
+}

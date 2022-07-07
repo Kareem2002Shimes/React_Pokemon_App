@@ -1,12 +1,29 @@
 import React from "react";
-import TodoListFC from "./components/Todo List FunctionalComponent/TodoListFC";
-import TodoListCC from "./components/Todo List Class Component/TodoListCC";
+import Input from "./components/Redux_TodoList/components/input/Input";
+import "./App.css";
+import TodoItem from "./components/Redux_TodoList/components/todoItem/TodoItem";
+import { useSelector } from "react-redux/es/exports";
+import { selectTodoList } from "./components/Redux_TodoList/components/features/TodoSlice";
+
 const App = () => {
+  const todoList = useSelector(selectTodoList);
+
   return (
-    <React.Fragment>
-      <TodoListFC />
-      <TodoListCC />
-    </React.Fragment>
+    <div className="app">
+      <div className="app-container">
+        <div className="todo-container">
+          {todoList.map((item) => (
+            <TodoItem
+              key={item.id}
+              name={item.item}
+              done={item.done}
+              id={item.id}
+            />
+          ))}
+        </div>
+        <Input />
+      </div>
+    </div>
   );
 };
 
