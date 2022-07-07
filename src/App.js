@@ -1,30 +1,53 @@
-import React from "react";
-import Input from "./components/Redux_TodoList/components/input/Input";
-import "./App.css";
-import TodoItem from "./components/Redux_TodoList/components/todoItem/TodoItem";
-import { useSelector } from "react-redux/es/exports";
-import { selectTodoList } from "./components/Redux_TodoList/components/features/TodoSlice";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import PokemonList from "./components/Pokemon App/PokemonList";
+import Pagination from "./components/Pokemon App/Pagination";
 
-const App = () => {
-  const todoList = useSelector(selectTodoList);
+function App() {
+  const [pokemon, setPokemon] = useState([]);
+  const [currentPageUrl, setCurrentPageUrl] = useState(
+    "https://pokeapi.co/api/v2/pokemon"
+  );
+  const [nextPageUrl, setNextPageUrl] = useState();
+  const [prevPageUrl, setPrevPageUrl] = useState();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancel;
+    setLoading(true);
+    axios
+      .get(currentPageUrl, {
+        cancelToken: new axios.CancelToken((c) => (cancel = c)),
+      })
+      .then((response) => {
+        setLoading(false);
+        setNextPageUrl(response.data.next);
+        setPrevPageUrl(response.data.previous);
+        setPokemon(response.data.results.map((p) => p.name));
+      })
+      .catch((error) => console.log(error));
+
+    return () => cancel();
+  }, [currentPageUrl]);
+
+  if (loading) return "Loading...";
+
+  function goToNextPage() {
+    setCurrentPageUrl(nextPageUrl);
+  }
+  function goToPrevPage() {
+    setCurrentPageUrl(prevPageUrl);
+  }
 
   return (
-    <div className="app">
-      <div className="app-container">
-        <div className="todo-container">
-          {todoList.map((item) => (
-            <TodoItem
-              key={item.id}
-              name={item.item}
-              done={item.done}
-              id={item.id}
-            />
-          ))}
-        </div>
-        <Input />
-      </div>
-    </div>
+    <React.Fragment>
+      <PokemonList pokemon={pokemon} />
+      <Pagination
+        goToNextPage={nextPageUrl ? goToNextPage : null}
+        goToPrevPage={prevPageUrl ? goToPrevPage : null}
+      />
+    </React.Fragment>
   );
-};
+}
 
 export default App;
